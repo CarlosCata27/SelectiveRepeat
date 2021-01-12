@@ -1,0 +1,50 @@
+clc;
+clear all;
+NumeroTramas=1000;
+Ventana=[3 5];
+NR=[0.01 0.1];
+pt=w+1;
+Bandera=0;
+ext=0;
+Bandera1=0;
+Bandera2=0;
+Tramas=1:n;
+for i=1:w
+    fprintf('Frame %d Transferred\n',Tramas(i));
+end
+while Bandera==0
+    Dado=rand(1);
+    if Dado>3
+        fprintf('PAK of frame %d received\n',Tramas(pt-w));
+    else
+        fprintf('NAK of frame %d received\n',Tramas(pt-w));
+        ext=ext+1;
+        for i=n+ext:-1:pt+1
+            Tramas(i)=Tramas(i-1);
+        end
+        Tramas(pt)=Tramas(pt-w);
+    end
+    fprintf('Frame %d Transferred\n',Tramas(pt));
+    if Tramas(pt)==n
+        Bandera=1;
+    end
+    pt=pt+1;
+end
+k=pt-w;
+while Bandera2==0
+    test=randint(1,1,[1 7]);
+    if Bandera1==1
+        fprintf('Frame %d Transmitted\n',Tramas(k));
+        Bandera1=0;
+    end
+    if test>3
+        fprintf('PAK of frame %d received\n',Tramas(k));
+        k=k+1;
+    else
+        fprintf('NAK of frame %d received\n',Tramas(k));
+        Bandera1=1;
+    end
+    if k==n+ext+1
+        Bandera2=1;
+    end
+end
